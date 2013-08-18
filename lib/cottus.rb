@@ -21,6 +21,10 @@ module Cottus
       with_retries(:post, path, options, &block)
     end
 
+    def put(path, options={}, &block)
+      with_retries(:put, path, options, &block)
+    end
+
     private
 
     def with_retries(meth, path, options={}, &block)
@@ -38,13 +42,6 @@ module Cottus
       end
     end
 
-    VALID_EXCEPTIONS = [
-      Timeout::Error,
-      Errno::ECONNREFUSED,
-      Errno::ETIMEDOUT,
-      Errno::ECONNRESET
-    ].freeze
-
     def next_host
       h = @hosts[@index]
       @index = (@index + 1) % @hosts.count
@@ -56,5 +53,12 @@ module Cottus
       hosts = hosts.map { |h| "#{h}:#{port}" } unless port.nil?
       hosts
     end
+
+    VALID_EXCEPTIONS = [
+      Timeout::Error,
+      Errno::ECONNREFUSED,
+      Errno::ETIMEDOUT,
+      Errno::ECONNRESET
+    ].freeze
   end
 end
