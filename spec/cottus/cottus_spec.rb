@@ -86,5 +86,66 @@ module Cottus
         end
       end
     end
+
+    describe '#post' do
+      let :client do
+        described_class.new('http://localhost:1234,http://localhost:12345,http://localhost:12343')
+      end
+
+      it 'uses the first host for the first request' do
+        request = stub_request(:post, 'http://localhost:1234/some/path').with(body: "query=1")
+        client.post '/some/path', body: { query: 1 }
+        expect(request).to have_been_requested
+      end
+
+      it 'uses the second host for the second request' do
+        stub_request(:post, 'http://localhost:1234/some/path').with(body: "query=1")
+        request = stub_request(:post, 'http://localhost:12345/some/path').with(body: "query=1")
+        2.times { client.post('/some/path', body: { query: 1 }) }
+        expect(request).to have_been_requested
+      end
+
+      context 'exceptions' do
+        context 'Timeout::Error' do
+          it 'attempts to use each host until one succeeds' do
+            stub_request(:post, 'http://localhost:1234/some/path').with(body: "query=1").to_timeout
+            stub_request(:post, 'http://localhost:12345/some/path').with(body: "query=1").to_timeout
+            request = stub_request(:post, 'http://localhost:12343/some/path').with(body: "query=1")
+
+            client.post '/some/path', body: { query: 1 }
+            expect(request).to have_been_requested
+          end
+
+          it 'gives up after trying all hosts' do
+            stub_request(:post, 'http://localhost:1234/some/path').with(body: "query=1").to_timeout
+            stub_request(:post, 'http://localhost:12345/some/path').with(body: "query=1").to_timeout
+            stub_request(:post, 'http://localhost:12343/some/path').with(body: "query=1").to_timeout
+
+            expect { client.post '/some/path', body: { query: 1 } }.to raise_error(Timeout::Error)
+          end
+        end
+
+        [Errno::ETIMEDOUT, Errno::ECONNREFUSED, Errno::ECONNRESET].each do |error|
+          context "#{error}" do
+            it 'attempts to use each host until one succeeds' do
+              stub_request(:post, 'http://localhost:1234/some/path').with(body: "query=1").to_raise(error)
+              stub_request(:post, 'http://localhost:12345/some/path').with(body: "query=1").to_raise(error)
+              request = stub_request(:post, 'http://localhost:12343/some/path').with(body: "query=1")
+
+              client.post '/some/path', body: { query: 1 }
+              expect(request).to have_been_requested
+            end
+
+            it 'gives up after trying all hosts' do
+              stub_request(:post, 'http://localhost:1234/some/path').with(body:  "query=1").to_raise(error)
+              stub_request(:post, 'http://localhost:12345/some/path').with(body: "query=1").to_raise(error)
+              stub_request(:post, 'http://localhost:12343/some/path').with(body: "query=1").to_raise(error)
+
+              expect { client.post '/some/path', body: { query: 1 } }.to raise_error(error)
+            end
+          end
+        end
+      end
+    end
   end
 end

@@ -14,10 +14,20 @@ module Cottus
     end
 
     def get(path, options={}, &block)
+      with_retries(:get, path, options, &block)
+    end
+
+    def post(path, options={}, &block)
+      with_retries(:post, path, options, &block)
+    end
+
+    private
+
+    def with_retries(meth, path, options={}, &block)
       tries = 0
 
       begin
-        self.class.get(next_host + path, options, &block)
+        self.class.send(meth, next_host + path, options, &block)
       rescue *VALID_EXCEPTIONS => e
         if tries >= @hosts.count
           raise e
@@ -27,8 +37,6 @@ module Cottus
         end
       end
     end
-
-    private
 
     VALID_EXCEPTIONS = [
       Timeout::Error,
