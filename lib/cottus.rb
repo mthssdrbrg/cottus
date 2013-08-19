@@ -25,6 +25,10 @@ module Cottus
       with_retries(:put, path, options, &block)
     end
 
+    def head(path, options={}, &block)
+      with_retries(:head, path, options, &block)
+    end
+
     private
 
     def with_retries(meth, path, options={}, &block)

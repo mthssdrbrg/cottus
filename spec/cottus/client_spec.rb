@@ -142,5 +142,28 @@ module Cottus
         let(:verb) { :put }
       end
     end
+
+    describe '#head' do
+      let :client do
+        described_class.new('http://localhost:1234,http://localhost:12345,http://localhost:12343')
+      end
+
+      it 'uses the first host for the first request' do
+        request = stub_request(:head, 'http://localhost:1234/some/path?query=1')
+        client.head '/some/path', query: { query: 1 }
+        expect(request).to have_been_requested
+      end
+
+      it 'uses the second host for the second request' do
+        stub_request(:head, 'http://localhost:1234/some/path?query=1')
+        request = stub_request(:head, 'localhost:12345/some/path?query=1')
+        2.times { client.head('/some/path', query: { query: 1 }) }
+        expect(request).to have_been_requested
+      end
+
+      include_examples 'exception handling' do
+        let(:verb) { :head }
+      end
+    end
   end
 end
