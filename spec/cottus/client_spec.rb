@@ -26,143 +26,36 @@ module Cottus
       end
     end
 
-    shared_examples 'exception handling' do
-      context 'exceptions' do
-        context 'Timeout::Error' do
-          it 'attempts to use each host until one succeeds' do
-            stub_request(verb, 'http://localhost:1234/some/path').to_timeout
-            stub_request(verb, 'http://localhost:12345/some/path').to_timeout
-            request = stub_request(verb, 'http://localhost:12343/some/path')
-
-            client.send(verb, '/some/path')
-            expect(request).to have_been_requested
-          end
-
-          it 'gives up after trying all hosts' do
-            stub_request(verb, 'http://localhost:1234/some/path').to_timeout
-            stub_request(verb, 'http://localhost:12345/some/path').to_timeout
-            stub_request(verb, 'http://localhost:12343/some/path').to_timeout
-
-            expect { client.send(verb, '/some/path') }.to raise_error(Timeout::Error)
-          end
+    context 'retry strategy' do
+      context 'by default' do
+        let :client do
+          described_class.new('http://host1.com/')
         end
 
-        [Errno::ETIMEDOUT, Errno::ECONNREFUSED, Errno::ECONNRESET].each do |error|
-          context "#{error}" do
-            it 'attempts to use each host until one succeeds' do
-              stub_request(verb, 'http://localhost:1234/some/path').to_raise(error)
-              stub_request(verb, 'http://localhost:12345/some/path').to_raise(error)
-              request = stub_request(verb, 'http://localhost:12343/some/path')
-
-              client.send(verb, '/some/path')
-              expect(request).to have_been_requested
-            end
-
-            it 'gives up after trying all hosts' do
-              stub_request(verb, 'http://localhost:1234/some/path').to_raise(error)
-              stub_request(verb, 'http://localhost:12345/some/path').to_raise(error)
-              stub_request(verb, 'http://localhost:12343/some/path').to_raise(error)
-
-              expect { client.send(verb, '/some/path') }.to raise_error(error)
-            end
-          end
+        it 'uses a simple round-robin strategy' do
+          expect(client.strategy).to be_a RoundRobinStrategy
         end
       end
-    end
 
-    describe '#get' do
-      let :client do
-        described_class.new('http://localhost:1234,http://localhost:12345,http://localhost:12343')
-      end
+      context 'when given an explicit strategy' do
+        let :client do
+          described_class.new('http://localhost:1234', strategy: TimeoutableStrategy)
+        end
 
-      it 'uses the first host for the first request' do
-        request = stub_request(:get, 'http://localhost:1234/some/path?query=1')
-        client.get '/some/path', query: { query: 1 }
-        expect(request).to have_been_requested
-      end
+        it 'uses given strategy' do
+          expect(client.strategy).to be_a TimeoutableStrategy
+        end
 
-      it 'uses the second host for the second request' do
-        stub_request(:get, 'http://localhost:1234/some/path?query=1')
-        request = stub_request(:get, 'localhost:12345/some/path?query=1')
-        2.times { client.get('/some/path', query: { query: 1 }) }
-        expect(request).to have_been_requested
-      end
+        context 'strategy options' do
+          let :strategy do
+            double(:strategy, new: nil)
+          end
 
-      include_examples 'exception handling' do
-        let(:verb) { :get }
-      end
-    end
-
-    describe '#post' do
-      let :client do
-        described_class.new('http://localhost:1234,http://localhost:12345,http://localhost:12343')
-      end
-
-      it 'uses the first host for the first request' do
-        request = stub_request(:post, 'http://localhost:1234/some/path')
-        client.post '/some/path'
-        expect(request).to have_been_requested
-      end
-
-      it 'uses the second host for the second request' do
-        stub_request(:post, 'http://localhost:1234/some/path')
-        request = stub_request(:post, 'http://localhost:12345/some/path')
-
-        2.times { client.post '/some/path' }
-
-        expect(request).to have_been_requested
-      end
-
-      include_examples 'exception handling' do
-        let(:verb) { :post }
-      end
-    end
-
-    describe '#put' do
-      let :client do
-        described_class.new('http://localhost:1234,http://localhost:12345,http://localhost:12343')
-      end
-
-      it 'uses the first host for the first request' do
-        request = stub_request(:put, 'http://localhost:1234/some/path')
-        client.put '/some/path'
-        expect(request).to have_been_requested
-      end
-
-      it 'uses the second host for the second request' do
-        stub_request(:put, 'http://localhost:1234/some/path')
-        request = stub_request(:put, 'http://localhost:12345/some/path')
-
-        2.times { client.put '/some/path' }
-
-        expect(request).to have_been_requested
-      end
-
-      include_examples 'exception handling' do
-        let(:verb) { :put }
-      end
-    end
-
-    describe '#head' do
-      let :client do
-        described_class.new('http://localhost:1234,http://localhost:12345,http://localhost:12343')
-      end
-
-      it 'uses the first host for the first request' do
-        request = stub_request(:head, 'http://localhost:1234/some/path?query=1')
-        client.head '/some/path', query: { query: 1 }
-        expect(request).to have_been_requested
-      end
-
-      it 'uses the second host for the second request' do
-        stub_request(:head, 'http://localhost:1234/some/path?query=1')
-        request = stub_request(:head, 'localhost:12345/some/path?query=1')
-        2.times { client.head('/some/path', query: { query: 1 }) }
-        expect(request).to have_been_requested
-      end
-
-      include_examples 'exception handling' do
-        let(:verb) { :head }
+          it 'passes explicit options when creating strategy' do
+            client = described_class.new('http://localhost:1234', strategy: strategy, strategy_options: {timeouts: [1, 3, 5]})
+            expect(strategy).to have_received(:new).with(anything, anything, {timeouts: [1, 3, 5]})
+          end
+        end
       end
     end
   end
