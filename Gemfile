@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gem 'httparty'
 
-group :test do
+group :development, :test do
   gem 'rspec'
   gem 'webmock'
-  gem 'simplecov'
+  gem 'simplecov', require: false
 end
