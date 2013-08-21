@@ -6,7 +6,7 @@ module Cottus
     attr_reader :hosts, :strategy
 
     def initialize(hosts, options={})
-      @hosts = parse_hosts(hosts, options[:port])
+      @hosts = parse_hosts(hosts)
       @strategy = create_strategy(options)
     end
 
@@ -28,10 +28,8 @@ module Cottus
 
     private
 
-    def parse_hosts(hosts, port=nil)
-      hosts = hosts.split(',') if hosts.is_a?(String)
-      hosts = hosts.map { |h| "#{h}:#{port}" } unless port.nil?
-      hosts
+    def parse_hosts(hosts)
+      hosts.is_a?(String) ? hosts.split(',') : hosts
     end
 
     def http

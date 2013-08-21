@@ -10,18 +10,8 @@ module Cottus
         expect(client.hosts).to eq ['host1:123', 'host2:125']
       end
 
-      it 'accepts an array of hosts w/ port argument' do
-        client = described_class.new(['host1', 'host2'], port: 1255)
-        expect(client.hosts).to eq ['host1:1255', 'host2:1255']
-      end
-
       it 'accepts a connection string w/ ports' do
         client = described_class.new('host1:1255,host2:1255,host3:1255')
-        expect(client.hosts).to eq ['host1:1255', 'host2:1255', 'host3:1255']
-      end
-
-      it 'accepts a connection string w/ port argument' do
-        client = described_class.new('host1,host2,host3', port: 1255)
         expect(client.hosts).to eq ['host1:1255', 'host2:1255', 'host3:1255']
       end
     end
