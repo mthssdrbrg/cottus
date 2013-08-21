@@ -14,12 +14,16 @@ module Cottus
       @strategy.execute(:get, path, options, &block)
     end
 
+    def put(path, options={}, &block)
+      @strategy.execute(:put, path, options, &block)
+    end
+
     def post(path, options={}, &block)
       @strategy.execute(:post, path, options, &block)
     end
 
-    def put(path, options={}, &block)
-      @strategy.execute(:put, path, options, &block)
+    def delete(path, options={}, &block)
+      @strategy.execute(:delete, path, options, &block)
     end
 
     def head(path, options={}, &block)
@@ -30,16 +34,12 @@ module Cottus
       @strategy.execute(:patch, path, options, &block)
     end
 
-    def delete(path, options={}, &block)
-      @strategy.execute(:delete, path, options, &block)
+    def options(path, options={}, &block)
+      @strategy.execute(:options, path, options, &block)
     end
 
     def move(path, options={}, &block)
       @strategy.execute(:move, path, options, &block)
-    end
-
-    def options(path, options={}, &block)
-      @strategy.execute(:options, path, options, &block)
     end
 
     private
