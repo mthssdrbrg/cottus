@@ -136,5 +136,15 @@ module Cottus
         let(:verb) { :move }
       end
     end
+
+    describe '#options' do
+      include_examples 'load balancing' do
+        let(:verb) { :options }
+      end
+
+      include_examples 'exception handling' do
+        let(:verb) { :options }
+      end
+    end
   end
 end
