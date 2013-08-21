@@ -54,15 +54,15 @@ module Cottus
 
     describe '#get' do
       it 'uses the first host for the first request' do
-        request = stub_request(:get, 'http://localhost:1234/some/path?query=1')
-        client.get '/some/path', query: { query: 1 }
+        request = stub_request(:get, 'http://localhost:1234/some/path')
+        client.get '/some/path'
         expect(request).to have_been_requested
       end
 
       it 'uses the second host for the second request' do
-        stub_request(:get, 'http://localhost:1234/some/path?query=1')
-        request = stub_request(:get, 'localhost:12345/some/path?query=1')
-        2.times { client.get('/some/path', query: { query: 1 }) }
+        stub_request(:get, 'http://localhost:1234/some/path')
+        request = stub_request(:get, 'localhost:12345/some/path')
+        2.times { client.get('/some/path') }
         expect(request).to have_been_requested
       end
 
@@ -115,15 +115,15 @@ module Cottus
 
     describe '#head' do
       it 'uses the first host for the first request' do
-        request = stub_request(:head, 'http://localhost:1234/some/path?query=1')
-        client.head '/some/path', query: { query: 1 }
+        request = stub_request(:head, 'http://localhost:1234/some/path')
+        client.head '/some/path'
         expect(request).to have_been_requested
       end
 
       it 'uses the second host for the second request' do
-        stub_request(:head, 'http://localhost:1234/some/path?query=1')
-        request = stub_request(:head, 'localhost:12345/some/path?query=1')
-        2.times { client.head('/some/path', query: { query: 1 }) }
+        stub_request(:head, 'http://localhost:1234/some/path')
+        request = stub_request(:head, 'localhost:12345/some/path')
+        2.times { client.head('/some/path') }
         expect(request).to have_been_requested
       end
 
