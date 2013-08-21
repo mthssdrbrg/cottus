@@ -48,22 +48,28 @@ module Cottus
       end
     end
 
+    shared_examples 'load balancing' do
+      it 'uses the first host for the first request' do
+        request = stub_request(verb, 'http://localhost:1234/some/path')
+        client.send(verb, '/some/path')
+        expect(request).to have_been_requested
+      end
+
+      it 'uses the second host for the second request' do
+        stub_request(verb, 'http://localhost:1234/some/path')
+        request = stub_request(verb, 'localhost:12345/some/path')
+        2.times { client.send(verb, '/some/path') }
+        expect(request).to have_been_requested
+      end
+    end
+
     let :client do
       Client.new('http://localhost:1234,http://localhost:12345,http://localhost:12343')
     end
 
     describe '#get' do
-      it 'uses the first host for the first request' do
-        request = stub_request(:get, 'http://localhost:1234/some/path')
-        client.get '/some/path'
-        expect(request).to have_been_requested
-      end
-
-      it 'uses the second host for the second request' do
-        stub_request(:get, 'http://localhost:1234/some/path')
-        request = stub_request(:get, 'localhost:12345/some/path')
-        2.times { client.get('/some/path') }
-        expect(request).to have_been_requested
+      include_examples 'load balancing' do
+        let(:verb) { :get }
       end
 
       include_examples 'exception handling' do
@@ -72,19 +78,8 @@ module Cottus
     end
 
     describe '#post' do
-      it 'uses the first host for the first request' do
-        request = stub_request(:post, 'http://localhost:1234/some/path')
-        client.post '/some/path'
-        expect(request).to have_been_requested
-      end
-
-      it 'uses the second host for the second request' do
-        stub_request(:post, 'http://localhost:1234/some/path')
-        request = stub_request(:post, 'http://localhost:12345/some/path')
-
-        2.times { client.post '/some/path' }
-
-        expect(request).to have_been_requested
+      include_examples 'load balancing' do
+        let(:verb) { :post }
       end
 
       include_examples 'exception handling' do
@@ -93,19 +88,8 @@ module Cottus
     end
 
     describe '#put' do
-      it 'uses the first host for the first request' do
-        request = stub_request(:put, 'http://localhost:1234/some/path')
-        client.put '/some/path'
-        expect(request).to have_been_requested
-      end
-
-      it 'uses the second host for the second request' do
-        stub_request(:put, 'http://localhost:1234/some/path')
-        request = stub_request(:put, 'http://localhost:12345/some/path')
-
-        2.times { client.put '/some/path' }
-
-        expect(request).to have_been_requested
+      include_examples 'load balancing' do
+        let(:verb) { :put }
       end
 
       include_examples 'exception handling' do
@@ -114,17 +98,8 @@ module Cottus
     end
 
     describe '#head' do
-      it 'uses the first host for the first request' do
-        request = stub_request(:head, 'http://localhost:1234/some/path')
-        client.head '/some/path'
-        expect(request).to have_been_requested
-      end
-
-      it 'uses the second host for the second request' do
-        stub_request(:head, 'http://localhost:1234/some/path')
-        request = stub_request(:head, 'localhost:12345/some/path')
-        2.times { client.head('/some/path') }
-        expect(request).to have_been_requested
+      include_examples 'load balancing' do
+        let(:verb) { :head }
       end
 
       include_examples 'exception handling' do
