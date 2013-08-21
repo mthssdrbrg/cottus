@@ -106,5 +106,15 @@ module Cottus
         let(:verb) { :head }
       end
     end
+
+    describe '#patch' do
+      include_examples 'load balancing' do
+        let(:verb) { :patch }
+      end
+
+      include_examples 'exception handling' do
+        let(:verb) { :patch }
+      end
+    end
   end
 end
