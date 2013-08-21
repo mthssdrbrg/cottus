@@ -34,6 +34,10 @@ module Cottus
       @strategy.execute(:delete, path, options, &block)
     end
 
+    def move(path, options={}, &block)
+      @strategy.execute(:move, path, options, &block)
+    end
+
     private
 
     def parse_hosts(hosts)

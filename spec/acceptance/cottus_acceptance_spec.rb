@@ -126,5 +126,15 @@ module Cottus
         let(:verb) { :delete }
       end
     end
+
+    describe '#move' do
+      include_examples 'load balancing' do
+        let(:verb) { :move }
+      end
+
+      include_examples 'exception handling' do
+        let(:verb) { :move }
+      end
+    end
   end
 end
