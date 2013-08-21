@@ -146,5 +146,17 @@ module Cottus
         let(:verb) { :options }
       end
     end
+
+    describe '#copy' do
+      pending do
+        include_examples 'load balancing' do
+          let(:verb) { :options }
+        end
+
+        include_examples 'exception handling' do
+          let(:verb) { :options }
+        end
+      end
+    end
   end
 end
