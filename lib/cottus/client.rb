@@ -30,6 +30,10 @@ module Cottus
       @strategy.execute(:patch, path, options, &block)
     end
 
+    def delete(path, options={}, &block)
+      @strategy.execute(:delete, path, options, &block)
+    end
+
     private
 
     def parse_hosts(hosts)
