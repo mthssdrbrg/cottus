@@ -29,18 +29,22 @@ module Cottus
 
       context 'when given an explicit strategy' do
         let :client do
-          described_class.new('http://localhost:1234', strategy: TimeoutableStrategy)
+          described_class.new('http://localhost:1234', strategy: strategy)
+        end
+
+        let :strategy do
+          double(:strategy, new: strategy_impl)
+        end
+
+        let :strategy_impl do
+          double(:strategy_impl)
         end
 
         it 'uses given strategy' do
-          expect(client.strategy).to be_a TimeoutableStrategy
+          expect(client.strategy).to eq(strategy_impl)
         end
 
         context 'strategy options' do
-          let :strategy do
-            double(:strategy, new: nil)
-          end
-
           it 'passes explicit options when creating strategy' do
             client = described_class.new('http://localhost:1234', strategy: strategy, strategy_options: {timeouts: [1, 3, 5]})
             expect(strategy).to have_received(:new).with(anything, anything, {timeouts: [1, 3, 5]})

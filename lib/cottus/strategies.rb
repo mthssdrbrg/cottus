@@ -23,7 +23,8 @@ module Cottus
     def initialize(hosts, client, options={})
       super
 
-      @index = 0
+      @current = 0
+      @mutex = Mutex.new
     end
 
     def execute(meth, path, options={}, &block)
@@ -44,11 +45,40 @@ module Cottus
     private
 
     def next_host
-      h = @hosts[@index]
-      @index = (@index + 1) % @hosts.count
-      h
+      @mutex.synchronize do
+        h = @hosts[@current]
+        @current = (@current + 1) % @hosts.count
+        h
+      end
     end
   end
 
-  class TimeoutableStrategy < Strategy; end
+  class RetryableRoundRobinStrategy < RoundRobinStrategy
+    def initialize(hosts, client, options={})
+      super
+
+      @timeouts = options[:timeouts] || [1, 3, 5]
+    end
+
+    def execute(meth, path, options={}, &block)
+      tries = 0
+      starting_host = host = next_host
+
+      begin
+        @client.send(meth, host + path, options, &block)
+      rescue *VALID_EXCEPTIONS => e
+        if tries < @timeouts.size
+          sleep @timeouts[tries]
+          tries += 1
+          retry
+        else
+          host = next_host
+          raise e if host == starting_host
+
+          tries = 0
+          retry
+        end
+      end
+    end
+  end
 end
