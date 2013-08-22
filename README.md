@@ -3,16 +3,16 @@
 [![Build Status](https://travis-ci.org/mthssdrbrg/cottus.png?branch=master)](https://travis-ci.org/mthssdrbrg/cottus)
 [![Coverage Status](https://coveralls.io/repos/mthssdrbrg/cottus/badge.png?branch=master)](https://coveralls.io/r/mthssdrbrg/cottus?branch=master)
 
-Cottus, named after one of the Hecatonchires of Greek mythology, is a multi limb
-HTTP client that currently wraps HTTParty, and manages requests against several
-hosts.
+Cottus, a multi limp HTTP client with an aim of making the use of multiple hosts
+providing the same service easier with regards to timeouts and automatic fail-over.
 
-This is useful for example when you have internal HTTP-based services running in
-EC2 and don't want to use an ELB (as this forces the service to be public) nor
-setup HAProxy or any other load-balancing solution.
+Sure enough, if you don't mind using an ELB in EC2 and making your service public,
+or setting up something like HAProxy, then this is not a client library for you.
 
-By default, Cottus will apply a round robin strategy, but you could very well
-define your own strategy.
+Initialize a client with a list of hosts and it will happily round-robin load-balance
+requests among them.
+You could very well define your own strategy if you feel like it and inject it
+into Cottus, more on that further down.
 
 ## Installation
 
@@ -78,6 +78,34 @@ It should be noted that I haven't decided on how strategies should be working to
 a 100% yet, so this might change in future releases.
 
 See ```lib/cottus/strategies.rb``` for further examples.
+
+### Using your own strategy
+
+In order to use your own Strategy class, supply the name of the class in the
+options hash as you create your instance, as such:
+
+```ruby
+require 'cottus'
+
+client = Cottus::Client.new(['http://n1.com', 'http://n2.com'], strategy: MyStrategy)
+```
+
+Want some additional options passed when your strategy is initialized?
+
+No problem! Pass them into the ```strategy_options``` sub-hash of the options
+hash to the client.
+
+```ruby
+require 'cottus'
+
+client = Cottus::Client.new(['http://n1.com', 'http://n2.com'], strategy: MyStrategy,
+  strategy_options: { an_option: 'cool stuff!'})
+```
+
+The options will be passed as an options hash to the strategy, as explained
+above.
+
+Boom! That's all there is, for the moment.
 
 ## Copyright
 Copyright 2013 Mathias Söderberg
