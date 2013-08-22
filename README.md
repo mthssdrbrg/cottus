@@ -107,6 +107,13 @@ above.
 
 Boom! That's all there is, for the moment.
 
+## Cottus?
+
+Cottus was one of the Hecatonchires of Greek mythology.
+The Hecatonchires, "Hundred-Handed Ones" (also with 50 heads) were figures in an
+archaic stage of Greek mythology.
+Three giants of incredible strength and ferocity that surpassed that of all Titans whom they helped overthrow.
+
 ## Copyright
 Copyright 2013 Mathias Söderberg
 
