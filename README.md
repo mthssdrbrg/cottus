@@ -32,3 +32,43 @@ puts response.body, response.code, response.message, response.headers.inspect
 
 That's about it! Cottus exposes almost all of the same methods with the same semantics as
 HTTParty does, with the exception of ```HTTParty#copy```.
+
+## Strategy
+
+A "Strategy" is merely a class implementing an ```execute``` method that is
+responsible for carrying out the action specified by the passed ```meth```
+argument.
+
+The Strategy class must however also implement an ```#initialize``` method which
+takes three parameters: ```hosts```, ```client``` and an ```options``` hash:
+
+```ruby
+class SomeStrategy
+  def initialize(hosts, client, options={})
+  end
+
+  def execute(meth, path, options={}, &block)
+    # do something funky here
+  end
+end
+```
+
+If you don't mind inheritance there's a base class (```Cottus::Strategy```) that
+you can inherit from and the above class would instead become:
+
+```ruby
+class SomeStrategy < Strategy
+  def execute(meth, path, options={}, &block)
+    # do something funky here
+  end
+end
+```
+
+If you'd like to do some initialization on your own and override #initialize
+make sure to call ```#super``` or set the required instance variables
+(```@hosts```, ```@client```) on your own.
+
+It should be noted that I haven't decided on how strategies should be working to
+a 100% yet, so this might change in future releases.
+
+See ```lib/cottus/strategies.rb``` for further examples.
