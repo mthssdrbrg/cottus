@@ -14,6 +14,12 @@ setup HAProxy or any other load-balancing solution.
 By default, Cottus will apply a round robin strategy, but you could very well
 define your own strategy.
 
+## Installation
+
+```
+gem install cottus
+```
+
 ## Usage
 
 ```ruby
@@ -32,12 +38,6 @@ puts response.body, response.code, response.message, response.headers.inspect
 
 That's about it! Cottus exposes almost all of the same methods with the same semantics as
 HTTParty does, with the exception of ```HTTParty#copy```.
-
-## Installation
-
-```
-gem install cottus
-```
 
 ## Strategy
 
