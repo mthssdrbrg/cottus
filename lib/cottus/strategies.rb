@@ -23,7 +23,7 @@ module Cottus
     def initialize(hosts, client, options={})
       super
 
-      @index = 0
+      @current = 0
       @mutex = Mutex.new
     end
 
@@ -46,8 +46,8 @@ module Cottus
 
     def next_host
       @mutex.synchronize do
-        h = @hosts[@index]
-        @index = (@index + 1) % @hosts.count
+        h = @hosts[@current]
+        @current = (@current + 1) % @hosts.count
         h
       end
     end
