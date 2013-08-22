@@ -64,9 +64,9 @@ class SomeStrategy < Strategy
 end
 ```
 
-If you'd like to do some initialization on your own and override #initialize
-make sure to call ```#super``` or set the required instance variables
-(```@hosts```, ```@client```) on your own.
+If you'd like to do some initialization on your own and override
+```#initialize``` make sure to call ```#super``` or set the required instance
+variables (```@hosts```, ```@client```) on your own.
 
 It should be noted that I haven't decided on how strategies should be working to
 a 100% yet, so this might change in future releases.
