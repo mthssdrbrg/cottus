@@ -3,6 +3,22 @@
 require 'spec_helper'
 
 module Cottus
+  describe Strategy do
+    let :strategy do
+      described_class.new(['http://n1.com', 'http://n2.com'], http)
+    end
+
+    let :http do
+      double(:http, meth: nil)
+    end
+
+    describe '#execute' do
+      it 'raises a NotImplementedError' do
+        expect { strategy.execute(:meth, '/some/path') }.to raise_error(NotImplementedError, 'implement me in subclass')
+      end
+    end
+  end
+
   describe RoundRobinStrategy do
     let :strategy do
       described_class.new(hosts, http)

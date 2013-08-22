@@ -9,9 +9,20 @@ module Cottus
     Errno::ECONNRESET
   ].freeze
 
-  class RoundRobinStrategy
+  class Strategy
     def initialize(hosts, client, options={})
       @hosts, @client = hosts, client
+    end
+
+    def execute(meth, path, options={}, &block)
+      raise NotImplementedError, 'implement me in subclass'
+    end
+  end
+
+  class RoundRobinStrategy < Strategy
+    def initialize(hosts, client, options={})
+      super
+
       @index = 0
     end
 
@@ -39,8 +50,5 @@ module Cottus
     end
   end
 
-  class TimeoutableStrategy
-    def initialize(hosts, client, options={})
-    end
-  end
+  class TimeoutableStrategy < Strategy; end
 end
