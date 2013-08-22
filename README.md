@@ -21,9 +21,11 @@ require 'cottus'
 
 client = Cottus::Client.new(['http://n1.com', 'http://n2.com', 'http://n3.com'])
 
+# This request will be made against http://n1.com
 response = client.get('/any/path', query: {id: 1337})
 puts response.body, response.code, response.message, response.headers.inspect
 
+# This request will be made against http://n2.com
 response = client.post('/any/path', query: {id: 1337}, body: { attribute: 'cool'})
 puts response.body, response.code, response.message, response.headers.inspect
 ```
