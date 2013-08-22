@@ -82,7 +82,7 @@ module Cottus
     end
   end
 
-  describe RoundRobinWithTimeoutsStrategy do
+  describe RetryableRoundRobinStrategy do
     let :strategy do
       described_class.new(hosts, http, timeouts: [0, 0, 0])
     end

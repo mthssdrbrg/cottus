@@ -53,7 +53,7 @@ module Cottus
     end
   end
 
-  class RoundRobinWithTimeoutsStrategy < RoundRobinStrategy
+  class RetryableRoundRobinStrategy < RoundRobinStrategy
     def initialize(hosts, client, options={})
       super
 
