@@ -24,6 +24,7 @@ module Cottus
       super
 
       @index = 0
+      @mutex = Mutex.new
     end
 
     def execute(meth, path, options={}, &block)
@@ -44,9 +45,11 @@ module Cottus
     private
 
     def next_host
-      h = @hosts[@index]
-      @index = (@index + 1) % @hosts.count
-      h
+      @mutex.synchronize do
+        h = @hosts[@index]
+        @index = (@index + 1) % @hosts.count
+        h
+      end
     end
   end
 
