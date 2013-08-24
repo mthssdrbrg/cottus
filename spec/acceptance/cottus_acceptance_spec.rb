@@ -49,17 +49,37 @@ module Cottus
     end
 
     shared_examples 'load balancing' do
-      it 'uses the first host for the first request' do
-        request = stub_request(verb, 'http://localhost:1234/some/path')
-        client.send(verb, '/some/path')
-        expect(request).to have_been_requested
+      context 'with several hosts' do
+        it 'uses the first host for the first request' do
+          request = stub_request(verb, 'http://localhost:1234/some/path')
+          client.send(verb, '/some/path')
+          expect(request).to have_been_requested
+        end
+
+        it 'uses the second host for the second request' do
+          stub_request(verb, 'http://localhost:1234/some/path')
+          request = stub_request(verb, 'http://localhost:12345/some/path')
+          2.times { client.send(verb, '/some/path') }
+          expect(request).to have_been_requested
+        end
       end
 
-      it 'uses the second host for the second request' do
-        stub_request(verb, 'http://localhost:1234/some/path')
-        request = stub_request(verb, 'localhost:12345/some/path')
-        2.times { client.send(verb, '/some/path') }
-        expect(request).to have_been_requested
+      context 'with a single host' do
+        let :client do
+          Client.new('http://localhost:1234')
+        end
+
+        it 'uses the single host for the first request' do
+          request = stub_request(verb, 'http://localhost:1234/some/path')
+          client.send(verb, '/some/path')
+          expect(request).to have_been_requested
+        end
+
+        it 'uses the single host for the second request' do
+          request = stub_request(verb, 'http://localhost:1234/some/path')
+          2.times { client.send(verb, '/some/path') }
+          expect(request).to have_been_requested.twice
+        end
       end
     end
 
