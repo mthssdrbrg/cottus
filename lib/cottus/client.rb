@@ -53,7 +53,9 @@ module Cottus
     end
 
     def create_strategy(options)
-      strategy = (options[:strategy] || RoundRobinStrategy).new(hosts, http, options[:strategy_options])
+      strategy_options = options[:strategy_options] || {}
+      strategy_impl = options[:strategy] || RoundRobinStrategy
+      strategy_impl.new(hosts, http, strategy_options)
     end
   end
 end
