@@ -28,11 +28,11 @@ require 'cottus'
 client = Cottus::Client.new(['http://n1.com', 'http://n2.com', 'http://n3.com'])
 
 # This request will be made against http://n1.com
-response = client.get('/any/path', query: {id: 1337})
+response = client.get('/any/path', :query => {:id => 1337})
 puts response.body, response.code, response.message, response.headers.inspect
 
 # This request will be made against http://n2.com
-response = client.post('/any/path', query: {id: 1337}, body: { attribute: 'cool'})
+response = client.post('/any/path', :query => {:id => 1337}, :body => { :attribute => 'cool'})
 puts response.body, response.code, response.message, response.headers.inspect
 ```
 
@@ -87,7 +87,7 @@ options hash as you create your instance, as such:
 ```ruby
 require 'cottus'
 
-client = Cottus::Client.new(['http://n1.com', 'http://n2.com'], strategy: MyStrategy)
+client = Cottus::Client.new(['http://n1.com', 'http://n2.com'], :strategy => MyStrategy)
 ```
 
 Want some additional options passed when your strategy is initialized?
@@ -98,8 +98,14 @@ hash to the client.
 ```ruby
 require 'cottus'
 
-client = Cottus::Client.new(['http://n1.com', 'http://n2.com'], strategy: MyStrategy,
-  strategy_options: { an_option: 'cool stuff!'})
+options = {
+  :strategy => MyStrategy,
+  :strategy_options => {
+    :an_option => 'cool stuff!'
+  }
+}
+
+client = Cottus::Client.new(['http://n1.com', 'http://n2.com'], options)
 ```
 
 The options will be passed as an options hash to the strategy, as explained
@@ -107,7 +113,7 @@ above.
 
 Boom! That's all there is, for the moment.
 
-## Cottus?
+## cottus?
 
 Cottus was one of the Hecatonchires of Greek mythology.
 The Hecatonchires, "Hundred-Handed Ones" (also with 50 heads) were figures in an
