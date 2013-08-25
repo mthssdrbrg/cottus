@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    cottus (0.1.1)
+      httparty
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -42,8 +48,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cottus!
   coveralls
-  httparty
   rspec
   simplecov
   webmock
