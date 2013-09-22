@@ -19,14 +19,14 @@ module Cottus
       hosts.is_a?(String) ? hosts.split(',') : hosts
     end
 
-    def http
-      HTTParty
-    end
-
     def create_strategy(options)
       strategy_options = options[:strategy_options] || {}
       strategy_impl = options[:strategy] || RoundRobinStrategy
       strategy_impl.new(hosts, http, strategy_options)
+    end
+
+    def http
+      HTTParty
     end
   end
 end
