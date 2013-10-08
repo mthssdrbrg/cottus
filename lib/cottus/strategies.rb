@@ -10,8 +10,8 @@ module Cottus
   ].freeze
 
   class Strategy
-    def initialize(hosts, client, options={})
-      @hosts, @client = hosts, client
+    def initialize(connections, options={})
+      @connections = connections
     end
 
     def execute(meth, path, options={}, &block)
@@ -20,7 +20,7 @@ module Cottus
   end
 
   class RoundRobinStrategy < Strategy
-    def initialize(hosts, client, options={})
+    def initialize(connections, options={})
       super
 
       @current = 0
@@ -31,9 +31,9 @@ module Cottus
       tries = 0
 
       begin
-        @client.send(meth, next_host + path, options, &block)
+        next_connection.send(meth, path, options, &block)
       rescue *VALID_EXCEPTIONS => e
-        if tries >= @hosts.count
+        if tries >= @connections.count
           raise e
         else
           tries += 1
@@ -44,17 +44,17 @@ module Cottus
 
     private
 
-    def next_host
+    def next_connection
       @mutex.synchronize do
-        h = @hosts[@current]
-        @current = (@current + 1) % @hosts.count
+        h = @connections[@current]
+        @current = (@current + 1) % @connections.count
         h
       end
     end
   end
 
   class RetryableRoundRobinStrategy < RoundRobinStrategy
-    def initialize(hosts, client, options={})
+    def initialize(connections, options={})
       super
 
       @timeouts = options[:timeouts] || [1, 3, 5]
@@ -62,18 +62,18 @@ module Cottus
 
     def execute(meth, path, options={}, &block)
       tries = 0
-      starting_host = host = next_host
+      starting_connection = connection = next_connection
 
       begin
-        @client.send(meth, host + path, options, &block)
+        connection.send(meth, path, options, &block)
       rescue *VALID_EXCEPTIONS => e
         if tries < @timeouts.size
           sleep @timeouts[tries]
           tries += 1
           retry
         else
-          host = next_host
-          raise e if host == starting_host
+          connection = next_connection
+          raise e if connection == starting_connection
 
           tries = 0
           retry

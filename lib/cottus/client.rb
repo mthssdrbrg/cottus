@@ -6,23 +6,28 @@ module Cottus
 
     forward :get, :put, :post, :delete, :head, :patch, :options, :move, :to => :@strategy, :through => :execute
 
-    attr_reader :hosts, :strategy
+    attr_reader :connections, :strategy
 
     def initialize(hosts, options={})
-      @hosts = parse_hosts(hosts)
+      @connections = create_connections(hosts)
       @strategy = create_strategy(options)
+    end
+
+    def hosts
+      @connections.map(&:host)
     end
 
     private
 
-    def parse_hosts(hosts)
-      hosts.is_a?(String) ? hosts.split(',') : hosts
+    def create_connections(hosts)
+      hosts = hosts.is_a?(String) ? hosts.split(',') : hosts
+      hosts.map { |host| Connection.new(http, host) }
     end
 
     def create_strategy(options)
       strategy_options = options[:strategy_options] || {}
       strategy_impl = options[:strategy] || RoundRobinStrategy
-      strategy_impl.new(hosts, http, strategy_options)
+      strategy_impl.new(connections, strategy_options)
     end
 
     def http
