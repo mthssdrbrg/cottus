@@ -4,7 +4,7 @@ module Cottus
   class Client
     extend Forward
 
-    forward :get, :put, :post, :delete, :head, :patch, :options, :move
+    forward :get, :put, :post, :delete, :head, :patch, :options, :move, :to => :@strategy, :through => :execute
 
     attr_reader :hosts, :strategy
 
