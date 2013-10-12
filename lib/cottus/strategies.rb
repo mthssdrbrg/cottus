@@ -23,7 +23,7 @@ module Cottus
     def initialize(connections, options={})
       super
 
-      @current = 0
+      @index = 0
       @mutex = Mutex.new
     end
 
@@ -46,9 +46,9 @@ module Cottus
 
     def next_connection
       @mutex.synchronize do
-        h = @connections[@current]
-        @current = (@current + 1) % @connections.count
-        h
+        connection = @connections[@index]
+        @index = (@index + 1) % @connections.count
+        connection
       end
     end
   end
