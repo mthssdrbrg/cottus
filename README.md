@@ -46,11 +46,11 @@ responsible for carrying out the action specified by the passed ```meth```
 argument.
 
 The Strategy class must however also implement an ```#initialize``` method which
-takes three parameters: ```hosts```, ```client``` and an ```options``` hash:
+takes two parameters: ```connections``` and an ```options``` hash:
 
 ```ruby
 class SomeStrategy
-  def initialize(hosts, client, options={})
+  def initialize(connections, options={})
   end
 
   def execute(meth, path, options={}, &block)
@@ -72,7 +72,7 @@ end
 
 If you'd like to do some initialization on your own and override
 ```#initialize``` make sure to call ```#super``` or set the required instance
-variables (```@hosts```, ```@client```) on your own.
+variable (```@connections```) on your own.
 
 It should be noted that I haven't decided on how strategies should be working to
 a 100% yet, so this might change in future releases.

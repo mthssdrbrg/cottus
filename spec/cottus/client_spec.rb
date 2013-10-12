@@ -47,7 +47,7 @@ module Cottus
         context 'strategy options' do
           it 'passes explicit options when creating strategy' do
             client = described_class.new('http://localhost:1234', strategy: strategy, strategy_options: {timeouts: [1, 3, 5]})
-            expect(strategy).to have_received(:new).with(anything, anything, {timeouts: [1, 3, 5]})
+            expect(strategy).to have_received(:new).with(anything, {timeouts: [1, 3, 5]})
           end
         end
       end
