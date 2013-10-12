@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cottus (0.1.4)
+    cottus (0.2.0)
       httparty
 
 GEM
