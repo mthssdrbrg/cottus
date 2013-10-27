@@ -95,10 +95,6 @@ module Cottus
       double(:http, get: nil)
     end
 
-    let :connections do
-      [first, second, third]
-    end
-
     describe '#execute' do
       context 'without exceptions' do
         it_behaves_like 'a round-robin strategy'
@@ -158,10 +154,6 @@ module Cottus
 
     let :third do
       double(:http, get: nil)
-    end
-
-    let :connections do
-      [first, second, third]
     end
 
     describe '#execute' do
