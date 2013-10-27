@@ -37,7 +37,7 @@ puts response.body, response.code, response.message, response.headers.inspect
 ```
 
 That's about it! Cottus exposes almost all of the same methods with the same semantics as
-HTTParty does, with the exception of ```HTTParty#copy```.
+Excon does.
 
 ## Strategy
 
