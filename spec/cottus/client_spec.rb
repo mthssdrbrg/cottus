@@ -6,13 +6,13 @@ module Cottus
   describe Client do
     describe '#initialize' do
       it 'accepts an array of hosts w/ ports' do
-        client = described_class.new(['host1:123', 'host2:125'])
-        expect(client.hosts).to eq ['host1:123', 'host2:125']
+        client = described_class.new(['http://host1:123', 'http://host2:125'])
+        expect(client.hosts).to eq ['host1', 'host2']
       end
 
       it 'accepts a connection string w/ ports' do
-        client = described_class.new('host1:1255,host2:1255,host3:1255')
-        expect(client.hosts).to eq ['host1:1255', 'host2:1255', 'host3:1255']
+        client = described_class.new('http://host1:1255,http://host2:1255,http://host3:1255')
+        expect(client.hosts).to eq ['host1', 'host2', 'host3']
       end
     end
 

@@ -4,6 +4,7 @@ module Cottus
 
   VALID_EXCEPTIONS = [
     Timeout::Error,
+    Excon::Errors::Timeout,
     Errno::ECONNREFUSED,
     Errno::ETIMEDOUT,
     Errno::ECONNRESET

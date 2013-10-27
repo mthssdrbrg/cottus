@@ -21,17 +21,13 @@ module Cottus
 
     def create_connections(hosts)
       hosts = hosts.is_a?(String) ? hosts.split(',') : hosts
-      hosts.map { |host| Connection.new(http, host) }
+      hosts.map { |host| Connection.new(Excon.new(host)) }
     end
 
     def create_strategy(options)
       strategy_options = options[:strategy_options] || {}
       strategy_impl = options[:strategy] || RoundRobinStrategy
       strategy_impl.new(connections, strategy_options)
-    end
-
-    def http
-      HTTParty
     end
   end
 end
