@@ -29,11 +29,11 @@ client = Cottus::Client.new(['http://n1.com', 'http://n2.com', 'http://n3.com'])
 
 # This request will be made against http://n1.com
 response = client.get('/any/path', :query => {:id => 1337})
-puts response.body, response.code, response.message, response.headers.inspect
+puts response.status, response.body, response.headers.inspect
 
 # This request will be made against http://n2.com
-response = client.post('/any/path', :query => {:id => 1337}, :body => { :attribute => 'cool'})
-puts response.body, response.code, response.message, response.headers.inspect
+response = client.post('/any/path', :query => {:id => 1337}, :body => { :attribute => 'cool'}.to_json)
+puts response.status, response.body, response.headers.inspect
 ```
 
 That's about it! Cottus exposes almost all of the same methods with similar semantics as
@@ -53,7 +53,7 @@ class SomeStrategy
   def initialize(connections, options={})
   end
 
-  def execute(meth, path, options={}, &block)
+  def execute(meth, path, options={})
     # do something funky here
   end
 end
@@ -64,7 +64,7 @@ you can inherit from and the above class would instead become:
 
 ```ruby
 class SomeStrategy < Strategy
-  def execute(meth, path, options={}, &block)
+  def execute(meth, path, options={})
     # do something funky here
   end
 end
