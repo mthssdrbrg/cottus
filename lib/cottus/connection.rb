@@ -4,7 +4,7 @@ module Cottus
   class Connection
     extend Forward
 
-    forward :get, :put, :post, :delete, :head, :patch, :options, :move, :to => :wrapper
+    forward :get, :put, :post, :delete, :head, :patch, :options, :to => :wrapper
 
     attr_reader :host
 
