@@ -18,8 +18,8 @@ module Cottus
 
     private
 
-    def wrapper(verb, path, options={}, &blk)
-      @connection.send(verb, options.merge({path: path}), &blk)
+    def wrapper(verb, path, options={})
+      @connection.send(verb, options.merge({path: path}))
     end
   end
 end

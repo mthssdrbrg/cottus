@@ -15,7 +15,7 @@ module Cottus
       @connections = connections
     end
 
-    def execute(meth, path, options={}, &block)
+    def execute(meth, path, options={})
       raise NotImplementedError, 'implement me in subclass'
     end
   end
@@ -28,11 +28,11 @@ module Cottus
       @mutex = Mutex.new
     end
 
-    def execute(meth, path, options={}, &block)
+    def execute(meth, path, options={})
       tries = 0
 
       begin
-        next_connection.send(meth, path, options, &block)
+        next_connection.send(meth, path, options)
       rescue *VALID_EXCEPTIONS => e
         if tries >= @connections.count
           raise e
@@ -61,12 +61,12 @@ module Cottus
       @timeouts = options[:timeouts] || [1, 3, 5]
     end
 
-    def execute(meth, path, options={}, &block)
+    def execute(meth, path, options={})
       tries = 0
       starting_connection = connection = next_connection
 
       begin
-        connection.send(meth, path, options, &block)
+        connection.send(meth, path, options)
       rescue *VALID_EXCEPTIONS => e
         if tries < @timeouts.size
           sleep @timeouts[tries]
