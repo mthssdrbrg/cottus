@@ -36,17 +36,17 @@ response = client.post('/any/path', :query => {:id => 1337}, :body => { :attribu
 puts response.body, response.code, response.message, response.headers.inspect
 ```
 
-That's about it! Cottus exposes almost all of the same methods with the same semantics as
-HTTParty does, with the exception of ```HTTParty#copy```.
+That's about it! Cottus exposes almost all of the same methods with similar semantics as
+Excon does.
 
 ## Strategy
 
-A "Strategy" is merely a class implementing an ```execute``` method that is
-responsible for carrying out the action specified by the passed ```meth```
+A "Strategy" is merely a class implementing an `execute` method that is
+responsible for carrying out the action specified by the passed `meth`
 argument.
 
-The Strategy class must however also implement an ```#initialize``` method which
-takes two parameters: ```connections``` and an ```options``` hash:
+The Strategy class must however also implement an `#initialize` method which
+takes two parameters: `connections` and an `options` hash:
 
 ```ruby
 class SomeStrategy
@@ -59,7 +59,7 @@ class SomeStrategy
 end
 ```
 
-If you don't mind inheritance there's a base class (```Cottus::Strategy```) that
+If you don't mind inheritance there's a base class (`Cottus::Strategy`) that
 you can inherit from and the above class would instead become:
 
 ```ruby
@@ -71,13 +71,13 @@ end
 ```
 
 If you'd like to do some initialization on your own and override
-```#initialize``` make sure to call ```#super``` or set the required instance
-variable (```@connections```) on your own.
+`#initialize` make sure to call `#super` or set the required instance
+variable (`@connections`) on your own.
 
 It should be noted that I haven't decided on how strategies should be working to
 a 100% yet, so this might change in future releases.
 
-See ```lib/cottus/strategies.rb``` for further examples.
+See `lib/cottus/strategies.rb` for further examples.
 
 ### Using your own strategy
 
@@ -92,7 +92,7 @@ client = Cottus::Client.new(['http://n1.com', 'http://n2.com'], :strategy => MyS
 
 Want some additional options passed when your strategy is initialized?
 
-No problem! Pass them into the ```strategy_options``` sub-hash of the options
+No problem! Pass them into the `strategy_options` sub-hash of the options
 hash to the client.
 
 ```ruby

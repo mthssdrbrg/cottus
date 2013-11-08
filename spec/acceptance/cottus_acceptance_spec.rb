@@ -6,7 +6,7 @@ module Cottus
   describe 'Client acceptance spec' do
     shared_examples 'exception handling' do
       context 'exceptions' do
-        context 'Timeout::Error' do
+        context 'Excon::Errors::Timeout' do
           it 'attempts to use each host until one succeeds' do
             stub_request(verb, 'http://localhost:1234/some/path').to_timeout
             stub_request(verb, 'http://localhost:12345/some/path').to_timeout
@@ -21,7 +21,7 @@ module Cottus
             stub_request(verb, 'http://localhost:12345/some/path').to_timeout
             stub_request(verb, 'http://localhost:12343/some/path').to_timeout
 
-            expect { client.send(verb, '/some/path') }.to raise_error(Timeout::Error)
+            expect { client.send(verb, '/some/path') }.to raise_error(Excon::Errors::Timeout)
           end
         end
 
@@ -147,16 +147,6 @@ module Cottus
       end
     end
 
-    describe '#move' do
-      include_examples 'load balancing' do
-        let(:verb) { :move }
-      end
-
-      include_examples 'exception handling' do
-        let(:verb) { :move }
-      end
-    end
-
     describe '#options' do
       include_examples 'load balancing' do
         let(:verb) { :options }
@@ -164,18 +154,6 @@ module Cottus
 
       include_examples 'exception handling' do
         let(:verb) { :options }
-      end
-    end
-
-    describe '#copy' do
-      pending do
-        include_examples 'load balancing' do
-          let(:verb) { :options }
-        end
-
-        include_examples 'exception handling' do
-          let(:verb) { :options }
-        end
       end
     end
   end

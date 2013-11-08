@@ -7,11 +7,11 @@ module Cottus
       to, through = options.values_at(:to, :through)
 
       args.each do |verb|
-        define_method(verb) do |path, opts={}, &blk|
+        define_method(verb) do |path, opts={}|
           if to && through
-            instance_variable_get(to).send(through, verb, path, opts, &blk)
+            instance_variable_get(to).send(through, verb, path, opts)
           else
-            self.send(to, verb, path, opts, &blk)
+            self.send(to, verb, path, opts)
           end
         end
       end

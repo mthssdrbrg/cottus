@@ -8,14 +8,18 @@ module Cottus
 
     attr_reader :host
 
-    def initialize(*args)
-      @http, @host = *args
+    def initialize(connection)
+      @connection = connection
+    end
+
+    def host
+      @connection.data[:host]
     end
 
     private
 
-    def wrapper(verb, path, options={}, &blk)
-      @http.send(verb, @host + path, options, &blk)
+    def wrapper(verb, path, options={})
+      @connection.send(verb, options.merge({path: path}))
     end
   end
 end

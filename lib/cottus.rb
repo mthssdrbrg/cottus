@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'httparty'
+require 'excon'
 
 require 'cottus/forward'
 require 'cottus/client'
