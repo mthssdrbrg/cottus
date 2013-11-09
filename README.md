@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mthssdrbrg/cottus.png?branch=master)](https://travis-ci.org/mthssdrbrg/cottus)
 [![Coverage Status](https://coveralls.io/repos/mthssdrbrg/cottus/badge.png?branch=master)](https://coveralls.io/r/mthssdrbrg/cottus?branch=master)
+[![Gem Version](https://badge.fury.io/rb/cottus.png)](http://badge.fury.io/rb/cottus)
 
 Cottus, a multi limp HTTP client with an aim of making the use of multiple hosts
 providing the same service easier with regards to timeouts and automatic fail-over.
