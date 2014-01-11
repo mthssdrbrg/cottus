@@ -33,7 +33,7 @@ response = client.get('/any/path', :query => {:id => 1337})
 puts response.status, response.body, response.headers.inspect
 
 # This request will be made against http://n2.com
-response = client.post('/any/path', :query => {:id => 1337}, :body => { :attribute => 'cool'}.to_json)
+response = client.post('/any/path', :query => {:id => 1337}, :body => {:attribute => 'cool'}.to_json)
 puts response.status, response.body, response.headers.inspect
 ```
 
@@ -122,7 +122,7 @@ archaic stage of Greek mythology.
 Three giants of incredible strength and ferocity that surpassed that of all Titans whom they helped overthrow.
 
 ## Copyright
-Copyright 2013 Mathias Söderberg
+Copyright 2013 :: Mathias Söderberg
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the
