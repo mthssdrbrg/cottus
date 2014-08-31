@@ -4,7 +4,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/mthssdrbrg/cottus.svg)](https://coveralls.io/r/mthssdrbrg/cottus?branch=master)
 [![Gem Version](https://badge.fury.io/rb/cottus.svg)](http://badge.fury.io/rb/cottus)
 
-Cottus, a multi limp HTTP client with an aim of making the use of multiple hosts
+Cottus, a multi limb HTTP client with an aim of making the use of multiple hosts
 providing the same service easier with regards to timeouts and automatic fail-over.
 
 Sure enough, if you don't mind using an ELB in EC2 and making your service public,
@@ -122,6 +122,7 @@ archaic stage of Greek mythology.
 Three giants of incredible strength and ferocity that surpassed that of all Titans whom they helped overthrow.
 
 ## Copyright
+
 Copyright :: 2013-2014 Mathias Söderberg
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
